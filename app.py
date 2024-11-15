@@ -11,6 +11,13 @@ def create_app():
     csrf = CSRFProtect(app)
     db.init_app(app)
 
+    from flask import send_from_directory
+
+    @app.route('/static/<path:filename>')
+    def static_files(filename):
+        return send_from_directory('static', filename)
+
+
     @app.route('/')
     def index():
         if 'user' not in session:
