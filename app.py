@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from model import Todo, db, LoginForm, SignUpForm
 from flask_wtf.csrf import CSRFProtect
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='Static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'lewis'
