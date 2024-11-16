@@ -3,7 +3,7 @@ from model import Todo, db, LoginForm, SignUpForm
 from flask_wtf.csrf import CSRFProtect
 
 def create_app():
-    app = Flask(__name__, static_folder='static')
+    app = Flask(__name__, static_folder='Static')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'lewis'
@@ -11,9 +11,9 @@ def create_app():
     csrf = CSRFProtect(app)
     db.init_app(app)
 
-    @app.route('/static/<path:filename>')
+    @app.route('/Static/<path:filename>')
     def static_files(filename):
-        return send_from_directory('static', filename)
+        return send_from_directory('Static', filename)
 
     @app.route('/')
     def index():
@@ -72,8 +72,3 @@ def create_app():
         db.create_all()
 
     return app
-
-app = create_app()
-
-if __name__ == '__main__':
-    app.run(debug=True)
