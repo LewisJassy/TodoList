@@ -13,7 +13,7 @@ def create_app():
 
     @app.route('/static/<path:filename>')
     def static_files(filename):
-        return send_from_directory('Static', filename)
+        return send_from_directory('static', filename)
 
     @app.route('/')
     def index():
@@ -73,6 +73,7 @@ def create_app():
 
     return app
 
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     app.run(debug=True)
