@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
-from model import Todo, db, LoginForm, SignUpForm
+from model import Todo, User, db, LoginForm, SignUpForm
 from flask_wtf.csrf import CSRFProtect
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def create_app():
     app = Flask(__name__, static_folder='Static')
@@ -48,15 +49,23 @@ def create_app():
     def login():
         form = LoginForm()
         if form.validate_on_submit():
-            session['user'] = form.username.data
-            flash('Login successful', 'success')
-            return redirect(url_for('index'))
+            user = User.query.filter_by(username=form.username.data).first()
+            if user and check_password_hash(user.password, form.password.data):
+                session['user'] = user.username
+                flash('Login successful', 'success')
+                return redirect(url_for('index'))
+            else:
+                flash('Invalid username or password', 'danger')
         return render_template('login.html', form=form)
 
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
         form = SignUpForm()
         if form.validate_on_submit():
+            hashed_password = generate_password_hash(form.password.data, method='sha256')
+            new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
             session['user'] = form.username.data
             flash('Sign-up successful!', 'success')
             return redirect(url_for('index'))
